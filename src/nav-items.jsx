@@ -1,10 +1,8 @@
-import { HomeIcon, ClipboardListIcon } from "lucide-react";
+import { HomeIcon, ClipboardListIcon, UserIcon } from "lucide-react";
 import Index from "./pages/Index.jsx";
 import Registration from "./pages/Registration.jsx";
+import Profile from "./pages/Profile.jsx";
 
-/**
- * Central place for defining the navigation items. Used for navigation components and routing.
- */
 export const navItems = [
   {
     title: "Home",
@@ -17,5 +15,11 @@ export const navItems = [
     to: "/registration",
     icon: <ClipboardListIcon className="h-4 w-4" />,
     page: <Registration />,
+  },
+  {
+    title: "My Profile",
+    to: "/profile",
+    icon: <UserIcon className="h-4 w-4" />,
+    page: <Profile />,
   },
 ];

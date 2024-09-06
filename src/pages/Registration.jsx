@@ -22,7 +22,7 @@ const formSchema = z.object({
   grade: z.string().min(1, { message: 'Grade is required' }),
   faculty: z.string().min(1, { message: 'Faculty is required' }),
   gender: z.enum(['male', 'female', 'lgbtq+'], { required_error: 'Gender is required' }),
-  age: z.number().min(1, { message: 'Age is required' }),
+  age: z.number().optional(), // Removed the validator on age
   birthday: z.date({ required_error: 'Birthday is required' }),
   religion: z.string().optional(),
   lineId: z.string().optional(),
