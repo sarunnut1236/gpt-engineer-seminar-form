@@ -64,7 +64,6 @@ const Section2 = ({ form }) => {
       {renderFormField("grade", "Grade", "Enter your grade")}
       {renderFormField("faculty", "Faculty", "Enter your faculty")}
       {renderSelectField("gender", "Gender", ["male", "female", "lgbtq+"])}
-      {renderFormField("age", "Age", "Enter your age", "number")}
       
       <FormField
         control={form.control}
