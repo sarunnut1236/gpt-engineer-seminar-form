@@ -91,7 +91,7 @@ const Index = () => {
         
         {/* Photo Gallery */}
         <h2 className="text-3xl font-semibold mb-6 text-center">Photo Gallery</h2>
-        <Carousel className="w-full max-w-4xl mx-auto mb-12">
+        <Carousel className="w-[80%] max-w-4xl mx-auto mb-12">
           <CarouselContent>
             {galleryImages.map((image, index) => (
               <CarouselItem key={index}>

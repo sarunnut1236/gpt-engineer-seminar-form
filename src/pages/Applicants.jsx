@@ -6,41 +6,88 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const mockApplicants = [
-  { id: 1, name: "John Doe", email: "john@example.com", status: "Pending Review" },
-  { id: 2, name: "Jane Smith", email: "jane@example.com", status: "Interviewed" },
-  { id: 3, name: "Bob Johnson", email: "bob@example.com", status: "Pending Review" },
+  { 
+    id: 1, 
+    name: "John Doe", 
+    email: "john@example.com", 
+    status: "Pending Review",
+    answers: [
+      "I led a team project in school where we had to organize a charity event...",
+      "When conflicts arise, I try to listen to all parties involved and find a compromise...",
+      "I believe the most important qualities of a leader are integrity, empathy, and vision...",
+      "I had to make a difficult decision when choosing between two extracurricular activities...",
+      "To motivate others, I try to lead by example and provide positive reinforcement..."
+    ]
+  },
+  { 
+    id: 2, 
+    name: "Jane Smith", 
+    email: "jane@example.com", 
+    status: "Interviewed",
+    answers: [
+      "In my role as class president, I initiated a recycling program...",
+      "I handle conflicts by promoting open communication and finding common ground...",
+      "The most crucial leadership qualities are adaptability, communication skills, and resilience...",
+      "A difficult decision I faced was whether to pursue a summer internship or volunteer abroad...",
+      "I motivate others by setting clear goals, providing support, and celebrating achievements..."
+    ]
+  },
+  { 
+    id: 3, 
+    name: "Bob Johnson", 
+    email: "bob@example.com", 
+    status: "Pending Review",
+    answers: [
+      "I demonstrated leadership when I captained my school's debate team...",
+      "To resolve conflicts, I encourage team members to express their concerns and work together...",
+      "I believe leaders should be visionary, empathetic, and decisive...",
+      "I had to make a tough choice between focusing on academics or pursuing a passion project...",
+      "I motivate my peers by sharing enthusiasm for our goals and recognizing individual contributions..."
+    ]
+  },
+];
+
+const scoringCriteria = [
+  "Consider the applicant's ability to take initiative and guide others towards a common goal.",
+  "Evaluate the applicant's approach to problem-solving and ability to find constructive solutions.",
+  "Assess the applicant's understanding of leadership qualities and their potential to embody them.",
+  "Look for evidence of critical thinking and the ability to weigh pros and cons in decision-making.",
+  "Consider the applicant's understanding of team dynamics and ability to inspire others."
 ];
 
 const Applicants = () => {
   const [applicants, setApplicants] = useState(mockApplicants);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [score, setScore] = useState("");
-  const [feedback, setFeedback] = useState("");
+  const [scores, setScores] = useState({});
 
   const handleReview = (applicant) => {
     setSelectedApplicant(applicant);
     setIsDialogOpen(true);
+    setScores({});
+  };
+
+  const handleScoreChange = (questionIndex, score) => {
+    setScores(prevScores => ({
+      ...prevScores,
+      [questionIndex]: score
+    }));
   };
 
   const handleSubmitReview = () => {
-    // In a real application, you would send this data to your backend
     console.log("Submitting review for applicant:", selectedApplicant.id);
-    console.log("Score:", score);
-    console.log("Feedback:", feedback);
+    console.log("Scores:", scores);
 
-    // Update the applicant's status
     const updatedApplicants = applicants.map(app => 
       app.id === selectedApplicant.id ? {...app, status: "Reviewed"} : app
     );
     setApplicants(updatedApplicants);
 
-    // Close the dialog and reset the form
     setIsDialogOpen(false);
-    setScore("");
-    setFeedback("");
+    setScores({});
   };
 
   return (
@@ -76,34 +123,38 @@ const Applicants = () => {
       </Card>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>Review Applicant: {selectedApplicant?.name}</DialogTitle>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="score" className="text-right">
-                Score
-              </Label>
-              <Input
-                id="score"
-                type="number"
-                className="col-span-3"
-                value={score}
-                onChange={(e) => setScore(e.target.value)}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="feedback" className="text-right">
-                Feedback
-              </Label>
-              <Textarea
-                id="feedback"
-                className="col-span-3"
-                value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
-              />
-            </div>
+          <div className="max-h-[60vh] overflow-y-auto">
+            <Accordion type="single" collapsible className="w-full">
+              {selectedApplicant?.answers.map((answer, index) => (
+                <AccordionItem key={index} value={`item-${index}`}>
+                  <AccordionTrigger>Question {index + 1}</AccordionTrigger>
+                  <AccordionContent>
+                    <p className="mb-2">{answer}</p>
+                    <div className="flex items-center space-x-2">
+                      <Label htmlFor={`score-${index}`}>Score:</Label>
+                      <Input
+                        id={`score-${index}`}
+                        type="number"
+                        min="0"
+                        max="10"
+                        className="w-20"
+                        value={scores[index] || ''}
+                        onChange={(e) => handleScoreChange(index, e.target.value)}
+                      />
+                      <span className="text-sm text-gray-500">(0-10)</span>
+                    </div>
+                    <div className="mt-2">
+                      <Label>Scoring Criteria:</Label>
+                      <p className="text-sm text-gray-600 mt-1">{scoringCriteria[index]}</p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
           <DialogFooter>
             <Button onClick={handleSubmitReview}>Submit Review</Button>

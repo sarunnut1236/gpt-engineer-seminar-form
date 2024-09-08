@@ -13,9 +13,8 @@ const Footer = () => {
           </div>
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
             {navItems.map((item) => (
-              <Link key={item.to} to={item.to} className="text-[#2C3539] hover:text-[#4A5459] flex items-center">
-                {item.icon}
-                <span className="ml-2">{item.title}</span>
+              <Link key={item.to} to={item.to} className="text-[#2C3539] hover:text-[#4A5459]">
+                {item.title}
               </Link>
             ))}
           </div>
