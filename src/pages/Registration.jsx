@@ -40,8 +40,8 @@ const formSchema = z.object({
   aptitudeQuestion1: z.string().min(1, { message: 'Please answer the aptitude question' }),
 });
 
-const SuccessModal = ({ isOpen, onClose, onRedirect }) => (
-  <Dialog open={isOpen} onOpenChange={onClose}>
+const SuccessModal = ({ isOpen, onRedirect }) => (
+  <Dialog open={isOpen} onOpenChange={() => {}}>
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2">
@@ -151,8 +151,7 @@ const Registration = () => {
       </Dialog>
 
       <SuccessModal 
-        isOpen={showSuccess} 
-        onClose={() => setShowSuccess(false)} 
+        isOpen={showSuccess}
         onRedirect={handleRedirectToProfile}
       />
     </div>

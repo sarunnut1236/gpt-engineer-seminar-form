@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from 'sonner';
 
 const formSchema = z.object({
-  interviewSlot: z.string().min(1, { message: 'Please select an interview slot' }),
+  interviewSlots: z.array(z.string()).min(1, { message: 'Please select at least one interview slot' }),
 });
 
 const ReserveInterviewSlot = () => {
@@ -28,14 +28,13 @@ const ReserveInterviewSlot = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      interviewSlot: '',
+      interviewSlots: [],
     },
   });
 
   const onSubmit = (data) => {
-    // In a real application, you would send this data to your backend
-    console.log('Selected interview slot:', data.interviewSlot);
-    toast.success('Interview slot reserved successfully!');
+    console.log('Selected interview slots:', data.interviewSlots);
+    toast.success('Interview slots reserved successfully!');
     // Simulate saving the data and redirecting
     setTimeout(() => {
       navigate('/profile');
@@ -45,33 +44,56 @@ const ReserveInterviewSlot = () => {
   return (
     <div className="min-h-screen bg-[#F5F5F0] text-[#2C3539] p-8">
       <div className="max-w-md mx-auto bg-[#FFFEFA] shadow-lg rounded-lg p-8">
-        <h1 className="text-3xl font-semibold mb-6 text-[#2C3539]">Reserve Interview Slot</h1>
+        <h1 className="text-3xl font-semibold mb-6 text-[#2C3539]">Reserve Interview Slots</h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="interviewSlot"
-              render={({ field }) => (
+              name="interviewSlots"
+              render={() => (
                 <FormItem>
-                  <FormLabel>Select Interview Slot</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="bg-[#FFFEFA] border-[#D2C8B6]">
-                        <SelectValue placeholder="Choose a slot" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {availableSlots.map((slot) => (
-                        <SelectItem key={slot} value={slot}>{slot}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Select Interview Slots</FormLabel>
+                  <div className="space-y-2">
+                    {availableSlots.map((slot) => (
+                      <FormField
+                        key={slot}
+                        control={form.control}
+                        name="interviewSlots"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={slot}
+                              className="flex flex-row items-start space-x-3 space-y-0"
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(slot)}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([...field.value, slot])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== slot
+                                          )
+                                        )
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                {slot}
+                              </FormLabel>
+                            </FormItem>
+                          )
+                        }}
+                      />
+                    ))}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <Button type="submit" className="bg-[#2C3539] hover:bg-[#4A5459] text-white">
-              Reserve Slot
+              Reserve Slots
             </Button>
           </form>
         </Form>
