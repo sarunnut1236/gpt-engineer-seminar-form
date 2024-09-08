@@ -1,7 +1,8 @@
-import { HomeIcon, ClipboardListIcon, UserIcon } from "lucide-react";
+import { HomeIcon, ClipboardListIcon, UserIcon, CalendarIcon } from "lucide-react";
 import Index from "./pages/Index.jsx";
 import Registration from "./pages/Registration.jsx";
 import Profile from "./pages/Profile.jsx";
+import ReserveInterviewSlot from "./pages/ReserveInterviewSlot.jsx";
 
 export const navItems = [
   {
@@ -15,6 +16,12 @@ export const navItems = [
     to: "/registration",
     icon: <ClipboardListIcon className="h-4 w-4" />,
     page: <Registration />,
+  },
+  {
+    title: "Reserve Interview",
+    to: "/reserve-interview",
+    icon: <CalendarIcon className="h-4 w-4" />,
+    page: <ReserveInterviewSlot />,
   },
   {
     title: "My Profile",

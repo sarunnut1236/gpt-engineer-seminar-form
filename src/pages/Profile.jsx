@@ -29,6 +29,7 @@ const Profile = () => {
     personalMedication: 'None',
     foodAllergy: 'Peanuts',
     shirtSize: 'M',
+    interviewSlot: '2024-07-18 10:00 AM', // New field for interview slot
   };
 
   const renderCard = (title, content) => (
@@ -93,6 +94,7 @@ const Profile = () => {
           {renderCard("Other Information", (
             <div>
               <p><strong>Shirt Size:</strong> {mockProfileData.shirtSize}</p>
+              <p><strong>Interview Slot:</strong> {mockProfileData.interviewSlot}</p>
             </div>
           ))}
         </div>
