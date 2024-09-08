@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { navItems } from '@/nav-items';
 
 const Footer = () => {
   return (
@@ -11,9 +12,12 @@ const Footer = () => {
             <p className="text-[#4A5459]">Empowering future leaders</p>
           </div>
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
-            <Link to="/" className="text-[#2C3539] hover:text-[#4A5459]">Home</Link>
-            <Link to="/registration" className="text-[#2C3539] hover:text-[#4A5459]">Registration</Link>
-            <Link to="/profile" className="text-[#2C3539] hover:text-[#4A5459]">My Profile</Link>
+            {navItems.map((item) => (
+              <Link key={item.to} to={item.to} className="text-[#2C3539] hover:text-[#4A5459] flex items-center">
+                {item.icon}
+                <span className="ml-2">{item.title}</span>
+              </Link>
+            ))}
           </div>
         </div>
         <div className="mt-8 text-center text-[#4A5459]">

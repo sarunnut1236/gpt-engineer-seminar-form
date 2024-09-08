@@ -29,7 +29,7 @@ const Index = () => {
             <Button asChild className="bg-[#FFFEFA] hover:bg-[#E5E5E0] text-[#2C3539]">
               <Link to="/registration"><BookOpenIcon className="mr-2 h-4 w-4" /> Register Now</Link>
             </Button>
-            <Button asChild variant="outline" className="border-[#FFFEFA] text-[#FFFEFA] hover:bg-[#4A5459]">
+            <Button asChild variant="outline" className="border-[#FFFEFA] text-[#FFFEFA] hover:bg-[#4A5459] hover:text-white">
               <Link to="/profile"><UserIcon className="mr-2 h-4 w-4" /> My Profile</Link>
             </Button>
           </div>
@@ -96,7 +96,7 @@ const Index = () => {
             {galleryImages.map((image, index) => (
               <CarouselItem key={index}>
                 <div className="p-1">
-                  <img src={image} alt={`Seminar image ${index + 1}`} className="w-full h-64 md:h-96 object-cover rounded-lg" />
+                  <img src={image} alt={`Seminar image ${index + 1}`} className="w-full h-48 md:h-64 lg:h-96 object-cover rounded-lg" />
                 </div>
               </CarouselItem>
             ))}
