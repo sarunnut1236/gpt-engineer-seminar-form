@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import Section1 from '@/components/RegistrationForm/Section1';
 import Section2 from '@/components/RegistrationForm/Section2';
 import Section3 from '@/components/RegistrationForm/Section3';
+import { CheckCircle2 } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
@@ -38,8 +39,29 @@ const formSchema = z.object({
   aptitudeQuestion1: z.string().min(1, { message: 'Please answer the aptitude question' }),
 });
 
+const SuccessModal = ({ isOpen, onClose }) => (
+  <Dialog open={isOpen} onOpenChange={onClose}>
+    <DialogContent className="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-2">
+          <CheckCircle2 className="h-6 w-6 text-green-500" />
+          Registration Successful
+        </DialogTitle>
+        <DialogDescription>
+          Your registration for the Leadership Seminar has been submitted successfully.
+        </DialogDescription>
+      </DialogHeader>
+      <p>We look forward to seeing you at the event!</p>
+      <DialogFooter>
+        <Button onClick={onClose} className="bg-[#2C3539] hover:bg-[#4A5459] text-white">Close</Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+);
+
 const Registration = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -79,6 +101,7 @@ const Registration = () => {
   const handleConfirmSubmit = () => {
     console.log(form.getValues());
     setShowConfirmation(false);
+    setShowSuccess(true);
     // Here you would typically send the data to your backend
   };
 
@@ -119,6 +142,8 @@ const Registration = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <SuccessModal isOpen={showSuccess} onClose={() => setShowSuccess(false)} />
     </div>
   );
 };
