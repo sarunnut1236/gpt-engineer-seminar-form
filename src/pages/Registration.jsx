@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useNavigate } from 'react-router-dom';
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -39,7 +40,7 @@ const formSchema = z.object({
   aptitudeQuestion1: z.string().min(1, { message: 'Please answer the aptitude question' }),
 });
 
-const SuccessModal = ({ isOpen, onClose }) => (
+const SuccessModal = ({ isOpen, onClose, onRedirect }) => (
   <Dialog open={isOpen} onOpenChange={onClose}>
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
@@ -53,7 +54,7 @@ const SuccessModal = ({ isOpen, onClose }) => (
       </DialogHeader>
       <p>We look forward to seeing you at the event!</p>
       <DialogFooter>
-        <Button onClick={onClose} className="bg-[#2C3539] hover:bg-[#4A5459] text-white">Close</Button>
+        <Button onClick={onRedirect} className="bg-[#2C3539] hover:bg-[#4A5459] text-white">View Profile</Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>
@@ -62,6 +63,7 @@ const SuccessModal = ({ isOpen, onClose }) => (
 const Registration = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -105,6 +107,11 @@ const Registration = () => {
     // Here you would typically send the data to your backend
   };
 
+  const handleRedirectToProfile = () => {
+    setShowSuccess(false);
+    navigate('/profile');
+  };
+
   return (
     <div className="min-h-screen bg-[#F5F5F0] text-[#2C3539] p-8">
       <div className="max-w-4xl mx-auto bg-[#FFFEFA] shadow-lg rounded-lg p-8">
@@ -143,7 +150,11 @@ const Registration = () => {
         </DialogContent>
       </Dialog>
 
-      <SuccessModal isOpen={showSuccess} onClose={() => setShowSuccess(false)} />
+      <SuccessModal 
+        isOpen={showSuccess} 
+        onClose={() => setShowSuccess(false)} 
+        onRedirect={handleRedirectToProfile}
+      />
     </div>
   );
 };
