@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Menu, X } from 'lucide-react';
@@ -12,7 +12,7 @@ import {
 import { navItems } from '@/nav-items';
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   const closeSheet = () => setIsOpen(false);
@@ -44,13 +44,6 @@ const Navbar = () => {
           <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0">
             <SheetHeader className="p-4 border-b border-[#D2C8B6]">
               <SheetTitle className="text-left">Menu</SheetTitle>
-              <Button 
-                variant="ghost" 
-                className="absolute right-4 top-4" 
-                onClick={() => setIsOpen(false)}
-              >
-                <X className="h-6 w-6" />
-              </Button>
             </SheetHeader>
             <nav className="flex flex-col p-4">
               {navItems.map((item) => (

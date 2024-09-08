@@ -5,7 +5,7 @@ import * as z from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import Section1 from '@/components/RegistrationForm/Section1';
 import Section2 from '@/components/RegistrationForm/Section2';
 import Section3 from '@/components/RegistrationForm/Section3';
@@ -40,8 +40,8 @@ const formSchema = z.object({
   aptitudeQuestion1: z.string().min(1, { message: 'Please answer the aptitude question' }),
 });
 
-const SuccessModal = ({ isOpen, onRedirect }) => (
-  <Dialog open={isOpen} onOpenChange={() => {}}>
+const SuccessModal = ({ isOpen, onClose, onRedirect }) => (
+  <Dialog open={isOpen} onOpenChange={onClose}>
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2">
@@ -56,13 +56,23 @@ const SuccessModal = ({ isOpen, onRedirect }) => (
       <DialogFooter>
         <Button onClick={onRedirect} className="bg-[#2C3539] hover:bg-[#4A5459] text-white">View Profile</Button>
       </DialogFooter>
+      <DialogClose />
     </DialogContent>
   </Dialog>
+);
+
+const RegistrationSubmitted = () => (
+  <div className="text-center py-8">
+    <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-4" />
+    <h2 className="text-2xl font-semibold mb-2">Registration Submitted</h2>
+    <p className="text-[#4A5459]">Your registration has been successfully submitted. Thank you for your interest in the Leadership Seminar!</p>
+  </div>
 );
 
 const Registration = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -104,6 +114,7 @@ const Registration = () => {
     console.log(form.getValues());
     setShowConfirmation(false);
     setShowSuccess(true);
+    setIsSubmitted(true);
     // Here you would typically send the data to your backend
   };
 
@@ -111,6 +122,10 @@ const Registration = () => {
     setShowSuccess(false);
     navigate('/profile');
   };
+
+  if (isSubmitted) {
+    return <RegistrationSubmitted />;
+  }
 
   return (
     <div className="min-h-screen bg-[#F5F5F0] text-[#2C3539] p-8">
@@ -152,6 +167,7 @@ const Registration = () => {
 
       <SuccessModal 
         isOpen={showSuccess}
+        onClose={() => setShowSuccess(false)}
         onRedirect={handleRedirectToProfile}
       />
     </div>
