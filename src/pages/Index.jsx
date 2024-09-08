@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon, QuoteIcon, BookOpenIcon, AwardIcon, LightbulbIcon } from "lucide-react";
+import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon, QuoteIcon, BookOpenIcon, AwardIcon, LightbulbIcon, UserIcon } from "lucide-react";
 
 const Index = () => {
   const speakers = [
