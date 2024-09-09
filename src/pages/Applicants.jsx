@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ClockIcon, CheckCircleIcon, XCircleIcon, EyeIcon } from "lucide-react";
+import ApplicantsTable from '@/components/organisms/ApplicantsTable';
+import ReviewDialog from '@/components/organisms/ReviewDialog';
+import ApplicantInfoDialog from '@/components/organisms/ApplicantInfoDialog';
 
 const mockApplicants = [
   { 
@@ -73,13 +68,13 @@ const questions = [
 const Applicants = () => {
   const [applicants, setApplicants] = useState(mockApplicants);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
   const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false);
   const [scores, setScores] = useState({});
 
   const handleReview = (applicant) => {
     setSelectedApplicant(applicant);
-    setIsDialogOpen(true);
+    setIsReviewDialogOpen(true);
     setScores({});
   };
 
@@ -104,21 +99,8 @@ const Applicants = () => {
     );
     setApplicants(updatedApplicants);
 
-    setIsDialogOpen(false);
+    setIsReviewDialogOpen(false);
     setScores({});
-  };
-
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "Pending Review":
-        return <ClockIcon className="h-5 w-5 text-yellow-500" />;
-      case "Interviewed":
-        return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
-      case "Rejected":
-        return <XCircleIcon className="h-5 w-5 text-red-500" />;
-      default:
-        return null;
-    }
   };
 
   return (
@@ -128,95 +110,30 @@ const Applicants = () => {
           <CardTitle className="text-3xl font-semibold">Applicants</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>School</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {applicants.map((applicant) => (
-                <TableRow key={applicant.id}>
-                  <TableCell>{applicant.name}</TableCell>
-                  <TableCell>{applicant.email}</TableCell>
-                  <TableCell>{applicant.school}</TableCell>
-                  <TableCell className="flex items-center">
-                    {getStatusIcon(applicant.status)}
-                    <span className="ml-2">{applicant.status}</span>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleReview(applicant)} className="mr-2">Review</Button>
-                    <Button onClick={() => handleViewInfo(applicant)} variant="outline">
-                      <EyeIcon className="h-4 w-4 mr-2" /> View Info
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <ApplicantsTable
+            applicants={applicants}
+            onReview={handleReview}
+            onViewInfo={handleViewInfo}
+          />
         </CardContent>
       </Card>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>Review Applicant: {selectedApplicant?.name}</DialogTitle>
-          </DialogHeader>
-          <div className="max-h-[60vh] overflow-y-auto">
-            <Accordion type="single" collapsible className="w-full">
-              {selectedApplicant?.answers.map((answer, index) => (
-                <AccordionItem key={index} value={`item-${index}`}>
-                  <AccordionTrigger>Question {index + 1}: {questions[index]}</AccordionTrigger>
-                  <AccordionContent>
-                    <p className="mb-2">{answer}</p>
-                    <div className="flex items-center space-x-2">
-                      <Label htmlFor={`score-${index}`}>Score:</Label>
-                      <Input
-                        id={`score-${index}`}
-                        type="number"
-                        min="0"
-                        max="10"
-                        className="w-20"
-                        value={scores[index] || ''}
-                        onChange={(e) => handleScoreChange(index, e.target.value)}
-                      />
-                      <span className="text-sm text-gray-500">(0-10)</span>
-                    </div>
-                    <div className="mt-2">
-                      <Label>Scoring Criteria:</Label>
-                      <p className="text-sm text-gray-600 mt-1">{scoringCriteria[index]}</p>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
-          <DialogFooter>
-            <Button onClick={handleSubmitReview}>Submit Review</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ReviewDialog
+        isOpen={isReviewDialogOpen}
+        onOpenChange={setIsReviewDialogOpen}
+        applicant={selectedApplicant}
+        scores={scores}
+        onScoreChange={handleScoreChange}
+        onSubmit={handleSubmitReview}
+        questions={questions}
+        scoringCriteria={scoringCriteria}
+      />
 
-      <Dialog open={isInfoDialogOpen} onOpenChange={setIsInfoDialogOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Applicant Information: {selectedApplicant?.name}</DialogTitle>
-          </DialogHeader>
-          <div className="max-h-[60vh] overflow-y-auto">
-            <p><strong>Email:</strong> {selectedApplicant?.email}</p>
-            <p><strong>School:</strong> {selectedApplicant?.school}</p>
-            <p><strong>Status:</strong> {selectedApplicant?.status}</p>
-            {/* Add more personal information fields here */}
-          </div>
-          <DialogFooter>
-            <Button onClick={() => setIsInfoDialogOpen(false)}>Close</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ApplicantInfoDialog
+        isOpen={isInfoDialogOpen}
+        onOpenChange={setIsInfoDialogOpen}
+        applicant={selectedApplicant}
+      />
     </div>
   );
 };
