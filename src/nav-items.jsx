@@ -1,9 +1,10 @@
-import { HomeIcon, ClipboardListIcon, UserIcon, CalendarIcon, UsersIcon } from "lucide-react";
+import { HomeIcon, ClipboardListIcon, UserIcon, CalendarIcon, UsersIcon, LogInIcon } from "lucide-react";
 import Index from "./pages/Index.jsx";
 import Registration from "./pages/Registration.jsx";
 import Profile from "./pages/Profile.jsx";
 import ReserveInterviewSlot from "./pages/ReserveInterviewSlot.jsx";
 import Applicants from "./pages/Applicants.jsx";
+import Login from "./pages/Login.jsx";
 
 export const navItems = [
   {
@@ -36,5 +37,11 @@ export const navItems = [
     icon: <UsersIcon className="h-4 w-4" />,
     page: <Applicants />,
     staffOnly: true,
+  },
+  {
+    title: "Login",
+    to: "/login",
+    icon: <LogInIcon className="h-4 w-4" />,
+    page: <Login />,
   },
 ];

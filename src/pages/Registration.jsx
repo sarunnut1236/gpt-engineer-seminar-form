@@ -9,7 +9,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import Section1 from '@/components/RegistrationForm/Section1';
 import Section2 from '@/components/RegistrationForm/Section2';
 import Section3 from '@/components/RegistrationForm/Section3';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Save } from 'lucide-react';
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
@@ -38,6 +39,10 @@ const formSchema = z.object({
   foodAllergy: z.string().optional(),
   shirtSize: z.enum(['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'], { required_error: 'Shirt size is required' }),
   aptitudeQuestion1: z.string().min(1, { message: 'Please answer the aptitude question' }),
+  aptitudeQuestion2: z.string().min(1, { message: 'Please answer the aptitude question' }),
+  aptitudeQuestion3: z.string().min(1, { message: 'Please answer the aptitude question' }),
+  aptitudeQuestion4: z.string().min(1, { message: 'Please answer the aptitude question' }),
+  aptitudeQuestion5: z.string().min(1, { message: 'Please answer the aptitude question' }),
 });
 
 const SuccessModal = ({ isOpen, onClose, onRedirect }) => (
@@ -74,6 +79,7 @@ const Registration = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -103,6 +109,10 @@ const Registration = () => {
       foodAllergy: '',
       shirtSize: undefined,
       aptitudeQuestion1: '',
+      aptitudeQuestion2: '',
+      aptitudeQuestion3: '',
+      aptitudeQuestion4: '',
+      aptitudeQuestion5: '',
     },
   });
 
@@ -123,6 +133,17 @@ const Registration = () => {
     navigate('/profile');
   };
 
+  const handleSave = () => {
+    const currentData = form.getValues();
+    // Here you would save the current form data, e.g., to localStorage or to a backend
+    localStorage.setItem('registrationFormData', JSON.stringify(currentData));
+    toast({
+      title: "Progress Saved",
+      description: "Your registration progress has been saved.",
+      duration: 3000,
+    });
+  };
+
   if (isSubmitted) {
     return <RegistrationSubmitted />;
   }
@@ -136,7 +157,12 @@ const Registration = () => {
             <Section1 form={form} />
             <Section2 form={form} />
             <Section3 form={form} />
-            <Button type="submit" className="bg-[#2C3539] hover:bg-[#4A5459] text-white">Submit Registration</Button>
+            <div className="flex justify-between">
+              <Button type="button" onClick={handleSave} className="bg-[#4A5459] hover:bg-[#2C3539] text-white">
+                <Save className="mr-2 h-4 w-4" /> Save Progress
+              </Button>
+              <Button type="submit" className="bg-[#2C3539] hover:bg-[#4A5459] text-white">Submit Registration</Button>
+            </div>
           </form>
         </Form>
       </div>
