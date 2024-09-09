@@ -8,8 +8,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleGoogleLogin = () => {
-    // Here you would implement the Google authentication logic
-    // For this example, we'll just simulate a successful login
     console.log('Google login clicked');
     localStorage.setItem('user', JSON.stringify({ name: 'John Doe', email: 'john@example.com', googleConnected: true }));
     navigate('/profile');

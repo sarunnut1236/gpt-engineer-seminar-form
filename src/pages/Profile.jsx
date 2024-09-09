@@ -4,7 +4,6 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { FcGoogle } from 'react-icons/fc';
 
 const Profile = () => {
-  // In a real application, you would fetch this data from your backend
   const mockProfileData = {
     email: 'johndoe@example.com',
     province: 'Bangkok',
@@ -31,7 +30,7 @@ const Profile = () => {
     foodAllergy: 'Peanuts',
     shirtSize: 'M',
     interviewSlot: '2024-07-18 10:00 AM',
-    googleConnected: true, // New field to indicate if Google account is connected
+    googleConnected: true,
   };
 
   const renderCard = (title, content) => (
@@ -39,9 +38,7 @@ const Profile = () => {
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
-      <CardContent>
-        {content}
-      </CardContent>
+      <CardContent>{content}</CardContent>
     </Card>
   );
 
