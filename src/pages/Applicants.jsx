@@ -7,12 +7,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ClockIcon, CheckCircleIcon, XCircleIcon, EyeIcon } from "lucide-react";
 
 const mockApplicants = [
   { 
     id: 1, 
     name: "John Doe", 
     email: "john@example.com", 
+    school: "Sunrise High School",
     status: "Pending Review",
     answers: [
       "I led a team project in school where we had to organize a charity event...",
@@ -26,6 +28,7 @@ const mockApplicants = [
     id: 2, 
     name: "Jane Smith", 
     email: "jane@example.com", 
+    school: "Evergreen Academy",
     status: "Interviewed",
     answers: [
       "In my role as class president, I initiated a recycling program...",
@@ -39,6 +42,7 @@ const mockApplicants = [
     id: 3, 
     name: "Bob Johnson", 
     email: "bob@example.com", 
+    school: "Oakwood International School",
     status: "Pending Review",
     answers: [
       "I demonstrated leadership when I captained my school's debate team...",
@@ -58,16 +62,30 @@ const scoringCriteria = [
   "Consider the applicant's understanding of team dynamics and ability to inspire others."
 ];
 
+const questions = [
+  "Describe a situation where you demonstrated leadership skills.",
+  "How do you handle conflicts within a team?",
+  "What do you think are the most important qualities of a leader?",
+  "Describe a time when you had to make a difficult decision. How did you approach it?",
+  "How do you motivate others to achieve a common goal?"
+];
+
 const Applicants = () => {
   const [applicants, setApplicants] = useState(mockApplicants);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false);
   const [scores, setScores] = useState({});
 
   const handleReview = (applicant) => {
     setSelectedApplicant(applicant);
     setIsDialogOpen(true);
     setScores({});
+  };
+
+  const handleViewInfo = (applicant) => {
+    setSelectedApplicant(applicant);
+    setIsInfoDialogOpen(true);
   };
 
   const handleScoreChange = (questionIndex, score) => {
@@ -90,6 +108,19 @@ const Applicants = () => {
     setScores({});
   };
 
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case "Pending Review":
+        return <ClockIcon className="h-5 w-5 text-yellow-500" />;
+      case "Interviewed":
+        return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
+      case "Rejected":
+        return <XCircleIcon className="h-5 w-5 text-red-500" />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F5F5F0] text-[#2C3539] p-8">
       <Card className="max-w-6xl mx-auto bg-[#FFFEFA] shadow-lg rounded-lg">
@@ -102,8 +133,9 @@ const Applicants = () => {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead>School</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Action</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -111,9 +143,16 @@ const Applicants = () => {
                 <TableRow key={applicant.id}>
                   <TableCell>{applicant.name}</TableCell>
                   <TableCell>{applicant.email}</TableCell>
-                  <TableCell>{applicant.status}</TableCell>
+                  <TableCell>{applicant.school}</TableCell>
+                  <TableCell className="flex items-center">
+                    {getStatusIcon(applicant.status)}
+                    <span className="ml-2">{applicant.status}</span>
+                  </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleReview(applicant)}>Review</Button>
+                    <Button onClick={() => handleReview(applicant)} className="mr-2">Review</Button>
+                    <Button onClick={() => handleViewInfo(applicant)} variant="outline">
+                      <EyeIcon className="h-4 w-4 mr-2" /> View Info
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -131,7 +170,7 @@ const Applicants = () => {
             <Accordion type="single" collapsible className="w-full">
               {selectedApplicant?.answers.map((answer, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
-                  <AccordionTrigger>Question {index + 1}</AccordionTrigger>
+                  <AccordionTrigger>Question {index + 1}: {questions[index]}</AccordionTrigger>
                   <AccordionContent>
                     <p className="mb-2">{answer}</p>
                     <div className="flex items-center space-x-2">
@@ -158,6 +197,23 @@ const Applicants = () => {
           </div>
           <DialogFooter>
             <Button onClick={handleSubmitReview}>Submit Review</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isInfoDialogOpen} onOpenChange={setIsInfoDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Applicant Information: {selectedApplicant?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="max-h-[60vh] overflow-y-auto">
+            <p><strong>Email:</strong> {selectedApplicant?.email}</p>
+            <p><strong>School:</strong> {selectedApplicant?.school}</p>
+            <p><strong>Status:</strong> {selectedApplicant?.status}</p>
+            {/* Add more personal information fields here */}
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setIsInfoDialogOpen(false)}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
