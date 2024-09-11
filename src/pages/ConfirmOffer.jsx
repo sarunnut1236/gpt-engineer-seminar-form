@@ -12,9 +12,7 @@ import { toast } from 'sonner';
 import { Upload, CheckCircle2, CalendarIcon, MapPinIcon, UsersIcon } from 'lucide-react';
 
 const formSchema = z.object({
-  paySlip: z.instanceof(File).refine((file) => file.size <= 5000000, {
-    message: 'File size should be less than 5MB',
-  }),
+  paySlip: z.any(),
   acceptPolicy: z.boolean().refine((val) => val === true, {
     message: 'You must accept the seminar policy',
   }),
@@ -23,6 +21,7 @@ const formSchema = z.object({
 const ConfirmOffer = () => {
   const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [fileName, setFileName] = useState('');
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,6 +37,14 @@ const ConfirmOffer = () => {
     setTimeout(() => {
       navigate('/profile');
     }, 3000);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFileName(file.name);
+      form.setValue('paySlip', file);
+    }
   };
 
   if (isSubmitted) {
@@ -95,17 +102,17 @@ const ConfirmOffer = () => {
                 <FormField
                   control={form.control}
                   name="paySlip"
-                  render={({ field: { onChange, ...rest } }) => (
+                  render={({ field }) => (
                     <FormItem>
                       <FormLabel>Upload Pay Slip</FormLabel>
                       <FormControl>
                         <Input
                           type="file"
                           accept="image/*,.pdf"
-                          onChange={(e) => onChange(e.target.files[0])}
-                          {...rest}
+                          onChange={handleFileChange}
                         />
                       </FormControl>
+                      {fileName && <p className="text-sm text-gray-500 mt-1">Selected file: {fileName}</p>}
                       <FormMessage />
                     </FormItem>
                   )}

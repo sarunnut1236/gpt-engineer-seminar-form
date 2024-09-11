@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 
 const Section2 = ({ form }) => {
+  const [fileName, setFileName] = useState('');
+
   const renderFormField = (name, label, placeholder, type = "text") => (
     <FormField
       control={form.control}
@@ -51,6 +53,14 @@ const Section2 = ({ form }) => {
       )}
     />
   );
+
+  const handleFileChange = (e, onChange) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFileName(file.name);
+      onChange(file);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -111,7 +121,27 @@ const Section2 = ({ form }) => {
       {renderFormField("lineId", "Line ID", "Enter your Line ID (optional)")}
       {renderFormField("facebook", "Facebook", "Enter your Facebook profile (optional)")}
       {renderFormField("instagram", "Instagram", "Enter your Instagram handle (optional)")}
-      {renderFormField("image", "Profile Image URL", "Enter URL to your profile image (optional)")}
+      
+      <FormField
+        control={form.control}
+        name="image"
+        render={({ field: { onChange, value, ...rest } }) => (
+          <FormItem>
+            <FormLabel>Profile Image</FormLabel>
+            <FormControl>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e, onChange)}
+                {...rest}
+              />
+            </FormControl>
+            {fileName && <p className="text-sm text-gray-500 mt-1">Selected file: {fileName}</p>}
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
       {renderFormField("tel", "Telephone", "0xxxxxxxxx")}
       {renderFormField("guardianTel", "Guardian's Telephone", "0xxxxxxxxx")}
       {renderFormField("guardianRelationship", "Guardian's Relationship", "e.g., Parent, Sibling")}
