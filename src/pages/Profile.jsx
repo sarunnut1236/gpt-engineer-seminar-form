@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { FcGoogle } from 'react-icons/fc';
+import ApplicationStatusTimeline from '@/components/molecules/ApplicationStatusTimeline';
 
 const Profile = () => {
   const mockProfileData = {
@@ -31,6 +32,7 @@ const Profile = () => {
     shirtSize: 'M',
     interviewSlot: '2024-07-18 10:00 AM',
     googleConnected: true,
+    applicationStatus: 'Pending Interview', // Added this field
   };
 
   const renderCard = (title, content) => (
@@ -62,7 +64,11 @@ const Profile = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {renderCard("Application Status", (
+          <ApplicationStatusTimeline currentStatus={mockProfileData.applicationStatus} />
+        ))}
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           {renderCard("Personal Information", (
             <div>
               <p><strong>Email:</strong> {mockProfileData.email}</p>
