@@ -1,6 +1,6 @@
 import React from 'react';
-import { CheckCircle2, Circle, XCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { CheckCircle2, Circle, XCircle } from 'lucide-react';
 
 const statuses = [
   'Pending Application Form',
@@ -8,15 +8,14 @@ const statuses = [
   'Round #1 Pass',
   'Round #1 Rejected',
   'Pending Interview',
+  'Interviewed',
   'Pending Confirmation',
   'Accepted',
   'Rejected'
 ];
 
 const ApplicationStatusTimeline = ({ currentStatus }) => {
-  const getCurrentStatusIndex = () => {
-    return statuses.indexOf(currentStatus);
-  };
+  const getCurrentStatusIndex = () => statuses.indexOf(currentStatus);
 
   const variants = {
     inactive: { scale: 1, opacity: 0.7 },
