@@ -1,8 +1,14 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { FcGoogle } from 'react-icons/fc';
 import ApplicationStatusTimeline from '@/components/ApplicationStatusTimeline';
+
+const ProfileInfo = ({ label, value }) => (
+  <div className="mb-2">
+    <span className="font-semibold">{label}:</span> {value}
+  </div>
+);
 
 const Profile = () => {
   const mockProfileData = {
@@ -32,82 +38,83 @@ const Profile = () => {
     shirtSize: 'M',
     interviewSlot: '2024-07-18 10:00 AM',
     googleConnected: true,
-    applicationStatus: 'Pending Interview',
+    applicationStatus: 'Interview Scheduled',
   };
-
-  const renderCard = (title, content) => (
-    <Card className="bg-[#FFFEFA] border-[#D2C8B6]">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <CardContent>{content}</CardContent>
-    </Card>
-  );
 
   return (
     <div className="min-h-screen bg-[#F5F5F0] text-[#2C3539] p-8">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center mb-8">
-          <Avatar className="h-24 w-24 mr-6">
-            <AvatarImage src={mockProfileData.image} alt={mockProfileData.firstname} />
-            <AvatarFallback>{mockProfileData.firstname[0]}{mockProfileData.lastname[0]}</AvatarFallback>
-          </Avatar>
-          <div>
-            <h1 className="text-3xl font-semibold">{mockProfileData.prefix} {mockProfileData.firstname} {mockProfileData.lastname}</h1>
-            <p className="text-xl">{mockProfileData.nickname}</p>
-            {mockProfileData.googleConnected && (
-              <div className="flex items-center mt-2 text-sm text-gray-600">
-                <FcGoogle className="mr-2 h-5 w-5" />
-                Connected with Google
+        <Card className="bg-[#FFFEFA] border-[#D2C8B6] mb-8">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Avatar className="h-20 w-20 mr-6">
+                  <AvatarImage src={mockProfileData.image} alt={mockProfileData.firstname} />
+                  <AvatarFallback>{mockProfileData.firstname[0]}{mockProfileData.lastname[0]}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <h1 className="text-2xl font-semibold">{mockProfileData.prefix} {mockProfileData.firstname} {mockProfileData.lastname}</h1>
+                  <p className="text-lg">{mockProfileData.nickname}</p>
+                  {mockProfileData.googleConnected && (
+                    <div className="flex items-center mt-1 text-sm text-gray-600">
+                      <FcGoogle className="mr-2 h-4 w-4" />
+                      Connected with Google
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
-        </div>
+              <div className="text-right">
+                <p className="text-sm font-semibold mb-1">Application Status</p>
+                <ApplicationStatusTimeline currentStatus={mockProfileData.applicationStatus} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="md:col-span-2">
-            <ApplicationStatusTimeline currentStatus={mockProfileData.applicationStatus} />
-          </div>
+          <Card className="bg-[#FFFEFA] border-[#D2C8B6]">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
+              <ProfileInfo label="Email" value={mockProfileData.email} />
+              <ProfileInfo label="Province" value={mockProfileData.province} />
+              <ProfileInfo label="School" value={mockProfileData.school} />
+              <ProfileInfo label="Level" value={mockProfileData.level} />
+              <ProfileInfo label="Grade" value={mockProfileData.grade} />
+              <ProfileInfo label="Faculty" value={mockProfileData.faculty} />
+              <ProfileInfo label="Gender" value={mockProfileData.gender} />
+              <ProfileInfo label="Birthday" value={mockProfileData.birthday.toLocaleDateString()} />
+              <ProfileInfo label="Religion" value={mockProfileData.religion} />
+            </CardContent>
+          </Card>
           
-          {renderCard("Personal Information", (
-            <div>
-              <p><strong>Email:</strong> {mockProfileData.email}</p>
-              <p><strong>Province:</strong> {mockProfileData.province}</p>
-              <p><strong>School:</strong> {mockProfileData.school}</p>
-              <p><strong>Level:</strong> {mockProfileData.level}</p>
-              <p><strong>Grade:</strong> {mockProfileData.grade}</p>
-              <p><strong>Faculty:</strong> {mockProfileData.faculty}</p>
-              <p><strong>Gender:</strong> {mockProfileData.gender}</p>
-              <p><strong>Birthday:</strong> {mockProfileData.birthday.toLocaleDateString()}</p>
-              <p><strong>Religion:</strong> {mockProfileData.religion}</p>
-            </div>
-          ))}
+          <Card className="bg-[#FFFEFA] border-[#D2C8B6]">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
+              <ProfileInfo label="Line ID" value={mockProfileData.lineId} />
+              <ProfileInfo label="Facebook" value={mockProfileData.facebook} />
+              <ProfileInfo label="Instagram" value={mockProfileData.instagram} />
+              <ProfileInfo label="Telephone" value={mockProfileData.tel} />
+              <ProfileInfo label="Guardian's Telephone" value={mockProfileData.guardianTel} />
+              <ProfileInfo label="Guardian's Relationship" value={mockProfileData.guardianRelationship} />
+            </CardContent>
+          </Card>
           
-          {renderCard("Contact Information", (
-            <div>
-              <p><strong>Line ID:</strong> {mockProfileData.lineId}</p>
-              <p><strong>Facebook:</strong> {mockProfileData.facebook}</p>
-              <p><strong>Instagram:</strong> {mockProfileData.instagram}</p>
-              <p><strong>Telephone:</strong> {mockProfileData.tel}</p>
-              <p><strong>Guardian's Telephone:</strong> {mockProfileData.guardianTel}</p>
-              <p><strong>Guardian's Relationship:</strong> {mockProfileData.guardianRelationship}</p>
-            </div>
-          ))}
+          <Card className="bg-[#FFFEFA] border-[#D2C8B6]">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Medical Information</h2>
+              <ProfileInfo label="Medical Condition" value={mockProfileData.medicalCondition} />
+              <ProfileInfo label="Personal Medication" value={mockProfileData.personalMedication} />
+              <ProfileInfo label="Food Allergy" value={mockProfileData.foodAllergy} />
+            </CardContent>
+          </Card>
           
-          {renderCard("Medical Information", (
-            <div>
-              <p><strong>Medical Condition:</strong> {mockProfileData.medicalCondition}</p>
-              <p><strong>Personal Medication:</strong> {mockProfileData.personalMedication}</p>
-              <p><strong>Food Allergy:</strong> {mockProfileData.foodAllergy}</p>
-            </div>
-          ))}
-          
-          {renderCard("Other Information", (
-            <div>
-              <p><strong>Shirt Size:</strong> {mockProfileData.shirtSize}</p>
-              <p><strong>Interview Slot:</strong> {mockProfileData.interviewSlot}</p>
-            </div>
-          ))}
+          <Card className="bg-[#FFFEFA] border-[#D2C8B6]">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Other Information</h2>
+              <ProfileInfo label="Shirt Size" value={mockProfileData.shirtSize} />
+              <ProfileInfo label="Interview Slot" value={mockProfileData.interviewSlot} />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

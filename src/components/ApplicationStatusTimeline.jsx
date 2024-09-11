@@ -2,58 +2,47 @@ import React from 'react';
 import { CheckCircle2, Circle, XCircle, Clock } from 'lucide-react';
 
 const statuses = [
-  'Pending Application Form',
-  'Completed Application Form',
-  'Round #1 Pass',
-  'Round #1 Rejected',
-  'Pending Interview',
+  'Pending Application',
+  'Application Submitted',
+  'Round 1 Pass',
+  'Round 1 Rejected',
+  'Interview Scheduled',
   'Interviewed',
-  'Pending Confirmation',
+  'Offer Pending',
   'Accepted',
   'Rejected'
 ];
 
-const StatusIcon = ({ status, isActive }) => {
-  const baseClasses = "w-8 h-8 rounded-full flex items-center justify-center";
-  const activeClasses = isActive ? "text-white" : "text-gray-400";
-  
+const StatusIcon = ({ status }) => {
   switch (status) {
-    case 'Completed Application Form':
-    case 'Round #1 Pass':
+    case 'Application Submitted':
+    case 'Round 1 Pass':
     case 'Interviewed':
     case 'Accepted':
-      return <CheckCircle2 className={`${baseClasses} ${activeClasses} ${isActive ? "bg-green-500" : "bg-gray-200"}`} />;
-    case 'Round #1 Rejected':
+      return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+    case 'Round 1 Rejected':
     case 'Rejected':
-      return <XCircle className={`${baseClasses} ${activeClasses} ${isActive ? "bg-red-500" : "bg-gray-200"}`} />;
-    case 'Pending Application Form':
-    case 'Pending Interview':
-    case 'Pending Confirmation':
-      return <Clock className={`${baseClasses} ${activeClasses} ${isActive ? "bg-yellow-500" : "bg-gray-200"}`} />;
+      return <XCircle className="h-4 w-4 text-red-500" />;
+    case 'Pending Application':
+    case 'Interview Scheduled':
+    case 'Offer Pending':
+      return <Clock className="h-4 w-4 text-yellow-500" />;
     default:
-      return <Circle className={`${baseClasses} ${activeClasses} ${isActive ? "bg-blue-500" : "bg-gray-200"}`} />;
+      return <Circle className="h-4 w-4 text-gray-300" />;
   }
 };
 
 const ApplicationStatusTimeline = ({ currentStatus }) => {
-  const currentStatusIndex = statuses.indexOf(currentStatus);
-
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-semibold mb-4 text-[#2C3539]">Application Status</h3>
-      <div className="space-y-4">
-        {statuses.map((status, index) => (
-          <div key={status} className={`flex items-center ${index <= currentStatusIndex ? 'opacity-100' : 'opacity-50'}`}>
-            <StatusIcon status={status} isActive={index <= currentStatusIndex} />
-            <div className="ml-4 flex-grow">
-              <p className={`font-medium ${index === currentStatusIndex ? 'text-[#2C3539]' : 'text-gray-500'}`}>{status}</p>
-              {index === currentStatusIndex && (
-                <p className="text-sm text-gray-500">Current Status</p>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className="flex items-center space-x-2 text-sm">
+      {statuses.map((status, index) => (
+        <div key={status} className="flex items-center">
+          <StatusIcon status={status} />
+          {index < statuses.length - 1 && (
+            <div className={`h-0.5 w-4 ${index < statuses.indexOf(currentStatus) ? 'bg-green-500' : 'bg-gray-300'}`} />
+          )}
+        </div>
+      ))}
     </div>
   );
 };
