@@ -13,34 +13,39 @@ const statuses = [
   'Rejected'
 ];
 
-const StatusIcon = ({ status }) => {
+const StatusIcon = ({ status, isActive }) => {
+  const baseClasses = "h-4 w-4";
+  const activeClasses = isActive ? "text-blue-500" : "text-gray-300";
+  
   switch (status) {
     case 'Application Submitted':
     case 'Round 1 Pass':
     case 'Interviewed':
     case 'Accepted':
-      return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+      return <CheckCircle2 className={`${baseClasses} ${activeClasses}`} />;
     case 'Round 1 Rejected':
     case 'Rejected':
-      return <XCircle className="h-4 w-4 text-red-500" />;
+      return <XCircle className={`${baseClasses} ${activeClasses}`} />;
     case 'Pending Application':
     case 'Interview Scheduled':
     case 'Offer Pending':
-      return <Clock className="h-4 w-4 text-yellow-500" />;
+      return <Clock className={`${baseClasses} ${activeClasses}`} />;
     default:
-      return <Circle className="h-4 w-4 text-gray-300" />;
+      return <Circle className={`${baseClasses} ${activeClasses}`} />;
   }
 };
 
 const ApplicationStatusTimeline = ({ currentStatus }) => {
+  const currentIndex = statuses.indexOf(currentStatus);
+
   return (
-    <div className="flex items-center space-x-2 text-sm">
+    <div className="flex flex-col space-y-2">
       {statuses.map((status, index) => (
         <div key={status} className="flex items-center">
-          <StatusIcon status={status} />
-          {index < statuses.length - 1 && (
-            <div className={`h-0.5 w-4 ${index < statuses.indexOf(currentStatus) ? 'bg-green-500' : 'bg-gray-300'}`} />
-          )}
+          <StatusIcon status={status} isActive={index <= currentIndex} />
+          <div className={`ml-2 text-sm ${index <= currentIndex ? 'text-blue-600 font-medium' : 'text-gray-500'}`}>
+            {status}
+          </div>
         </div>
       ))}
     </div>

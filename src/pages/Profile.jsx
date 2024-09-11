@@ -44,9 +44,9 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-[#F5F5F0] text-[#2C3539] p-8">
       <div className="max-w-4xl mx-auto">
-        <Card className="bg-[#FFFEFA] border-[#D2C8B6] mb-8">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row gap-6 mb-8">
+          <Card className="bg-[#FFFEFA] border-[#D2C8B6] flex-grow">
+            <CardContent className="p-6">
               <div className="flex items-center">
                 <Avatar className="h-20 w-20 mr-6">
                   <AvatarImage src={mockProfileData.image} alt={mockProfileData.firstname} />
@@ -63,13 +63,17 @@ const Profile = () => {
                   )}
                 </div>
               </div>
-              <div className="text-right">
-                <p className="text-sm font-semibold mb-1">Application Status</p>
-                <ApplicationStatusTimeline currentStatus={mockProfileData.applicationStatus} />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-[#FFFEFA] border-[#D2C8B6] flex-grow">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Application Status</h2>
+              <p className="text-lg font-medium mb-2">Current Status: <span className="text-blue-600">{mockProfileData.applicationStatus}</span></p>
+              <ApplicationStatusTimeline currentStatus={mockProfileData.applicationStatus} />
+            </CardContent>
+          </Card>
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="bg-[#FFFEFA] border-[#D2C8B6]">
