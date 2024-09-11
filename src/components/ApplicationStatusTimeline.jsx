@@ -5,6 +5,7 @@ const statuses = [
   'Pending Application Form',
   'Completed Application Form',
   'Round #1 Pass',
+  'Round #1 Rejected',
   'Pending Interview',
   'Pending Confirmation',
   'Accepted'

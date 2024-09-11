@@ -1,10 +1,12 @@
-import { HomeIcon, ClipboardListIcon, UserIcon, CalendarIcon, UsersIcon, LogInIcon } from "lucide-react";
+import { HomeIcon, ClipboardListIcon, UserIcon, CalendarIcon, UsersIcon, LogInIcon, CheckSquareIcon, ClipboardIcon } from "lucide-react";
 import Index from "./pages/Index.jsx";
 import Registration from "./pages/Registration.jsx";
 import Profile from "./pages/Profile.jsx";
 import ReserveInterviewSlot from "./pages/ReserveInterviewSlot.jsx";
 import Applicants from "./pages/Applicants.jsx";
 import Login from "./pages/Login.jsx";
+import ConfirmOffer from "./pages/ConfirmOffer.jsx";
+import Registrar from "./pages/Registrar.jsx";
 
 export const navItems = [
   {
@@ -43,5 +45,18 @@ export const navItems = [
     to: "/login",
     icon: <LogInIcon className="h-4 w-4" />,
     page: <Login />,
+  },
+  {
+    title: "Confirm Offer",
+    to: "/confirm-offer",
+    icon: <CheckSquareIcon className="h-4 w-4" />,
+    page: <ConfirmOffer />,
+  },
+  {
+    title: "Registrar",
+    to: "/registrar",
+    icon: <ClipboardIcon className="h-4 w-4" />,
+    page: <Registrar />,
+    staffOnly: true,
   },
 ];

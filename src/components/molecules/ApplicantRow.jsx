@@ -1,10 +1,11 @@
 import React from 'react';
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import StatusIcon from '@/components/atoms/StatusIcon';
-import { EyeIcon } from "lucide-react";
+import { EyeIcon, MoreVertical } from "lucide-react";
 
-const ApplicantRow = ({ applicant, onReview, onViewInfo }) => (
+const ApplicantRow = ({ applicant, onReview, onViewInfo, onUpdateStatus }) => (
   <TableRow>
     <TableCell>{applicant.name}</TableCell>
     <TableCell>{applicant.email}</TableCell>
@@ -14,10 +15,33 @@ const ApplicantRow = ({ applicant, onReview, onViewInfo }) => (
       <span className="ml-2">{applicant.status}</span>
     </TableCell>
     <TableCell>
-      <Button onClick={() => onReview(applicant)} className="mr-2">Review</Button>
-      <Button onClick={() => onViewInfo(applicant)} variant="outline">
-        <EyeIcon className="h-4 w-4 mr-2" /> View Info
-      </Button>
+      <div className="flex items-center space-x-2">
+        <Button onClick={() => onReview(applicant)}>Review</Button>
+        <Button onClick={() => onViewInfo(applicant)} variant="outline">
+          <EyeIcon className="h-4 w-4 mr-2" /> View Info
+        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => onUpdateStatus(applicant, "Pending Interview")}>
+              Set to Pending Interview
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onUpdateStatus(applicant, "Interviewed")}>
+              Set to Interviewed
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onUpdateStatus(applicant, "Pending Confirmation")}>
+              Set to Pending Confirmation
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onUpdateStatus(applicant, "Accepted")}>
+              Set to Accepted
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </TableCell>
   </TableRow>
 );

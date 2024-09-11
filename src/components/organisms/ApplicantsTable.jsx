@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import ApplicantRow from '@/components/molecules/ApplicantRow';
 
-const ApplicantsTable = ({ applicants, onReview, onViewInfo }) => (
+const ApplicantsTable = ({ applicants, onReview, onViewInfo, onUpdateStatus }) => (
   <Table>
     <TableHeader>
       <TableRow>
@@ -20,6 +20,7 @@ const ApplicantsTable = ({ applicants, onReview, onViewInfo }) => (
           applicant={applicant}
           onReview={onReview}
           onViewInfo={onViewInfo}
+          onUpdateStatus={onUpdateStatus}
         />
       ))}
     </TableBody>
