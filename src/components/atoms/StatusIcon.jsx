@@ -11,6 +11,7 @@ const StatusIcon = ({ status }) => {
     case "Accepted":
       return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
     case "Round #1 Rejected":
+    case "Rejected":
       return <XCircleIcon className="h-5 w-5 text-red-500" />;
     case "Round #1 Pass":
       return <UserIcon className="h-5 w-5 text-blue-500" />;

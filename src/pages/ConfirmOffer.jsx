@@ -6,15 +6,17 @@ import * as z from 'zod';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from 'sonner';
-import { Upload, CheckCircle2 } from 'lucide-react';
+import { Upload, CheckCircle2, CalendarIcon, MapPinIcon, UsersIcon } from 'lucide-react';
 
 const formSchema = z.object({
-  paymentAmount: z.string().min(1, { message: 'Payment amount is required' }),
-  paymentDate: z.string().min(1, { message: 'Payment date is required' }),
   paySlip: z.instanceof(File).refine((file) => file.size <= 5000000, {
     message: 'File size should be less than 5MB',
+  }),
+  acceptPolicy: z.boolean().refine((val) => val === true, {
+    message: 'You must accept the seminar policy',
   }),
 });
 
@@ -24,15 +26,13 @@ const ConfirmOffer = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      paymentAmount: '',
-      paymentDate: '',
       paySlip: null,
+      acceptPolicy: false,
     },
   });
 
   const onSubmit = (data) => {
     console.log('Offer confirmation data:', data);
-    // Here you would typically send the data to your backend
     toast.success('Offer confirmed successfully!');
     setIsSubmitted(true);
     setTimeout(() => {
@@ -58,40 +58,40 @@ const ConfirmOffer = () => {
 
   return (
     <div className="min-h-screen bg-[#F5F5F0] text-[#2C3539] p-8">
-      <div className="max-w-md mx-auto">
-        <Card className="bg-[#FFFEFA] shadow-lg rounded-lg">
+      <div className="max-w-2xl mx-auto">
+        <Card className="bg-[#FFFEFA] shadow-lg rounded-lg mb-8">
           <CardHeader>
             <CardTitle className="text-2xl font-semibold">Confirm Your Offer</CardTitle>
+            <CardDescription>Please review the seminar details and confirm your participation</CardDescription>
           </CardHeader>
           <CardContent>
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Seminar Details</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center">
+                  <CalendarIcon className="mr-2 h-5 w-5 text-[#2C3539]" />
+                  <span>July 15-17, 2024</span>
+                </div>
+                <div className="flex items-center">
+                  <MapPinIcon className="mr-2 h-5 w-5 text-[#2C3539]" />
+                  <span>Grand Conference Center, Bangkok</span>
+                </div>
+                <div className="flex items-center">
+                  <UsersIcon className="mr-2 h-5 w-5 text-[#2C3539]" />
+                  <span>200 Participants</span>
+                </div>
+              </div>
+            </div>
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-2">Payment Details</h3>
+              <p>Seminar Fee: 5,000 THB</p>
+              <p>Payment Method: Bank Transfer</p>
+              <p>Account Name: Leadership Seminar Co., Ltd.</p>
+              <p>Account Number: 123-4-56789-0</p>
+              <p>Bank: Example Bank</p>
+            </div>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="paymentAmount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Payment Amount (THB)</FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="5000" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="paymentDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Payment Date</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
                 <FormField
                   control={form.control}
                   name="paySlip"
@@ -107,6 +107,25 @@ const ConfirmOffer = () => {
                         />
                       </FormControl>
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="acceptPolicy"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>
+                          I accept the seminar policy and terms
+                        </FormLabel>
+                      </div>
                     </FormItem>
                   )}
                 />

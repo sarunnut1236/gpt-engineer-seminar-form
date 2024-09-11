@@ -78,6 +78,20 @@ const mockApplicants = [
       "I motivate others by setting a positive example and helping them see the bigger picture of our goals..."
     ]
   },
+  {
+    id: 6,
+    name: "Eva Wilson",
+    email: "eva@example.com",
+    school: "Riverside High",
+    status: "Rejected",
+    answers: [
+      "I organized a school-wide talent show to raise funds for a local charity...",
+      "I believe in addressing conflicts head-on through open and honest communication...",
+      "A great leader should be empathetic, decisive, and able to inspire others...",
+      "I had to choose between continuing my sports career or focusing on academic pursuits...",
+      "I motivate my team by recognizing individual strengths and fostering a collaborative environment..."
+    ]
+  },
 ];
 
 const scoringCriteria = [
@@ -96,7 +110,7 @@ const questions = [
   "How do you motivate others to achieve a common goal?"
 ];
 
-const Applicants = () => {
+const ApplicantsPage = () => {
   const [applicants, setApplicants] = useState(mockApplicants);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
@@ -134,7 +148,7 @@ const Applicants = () => {
     } else if (averageScore >= 6) {
       newStatus = "Pending Interview";
     } else {
-      newStatus = "Round #1 Rejected";
+      newStatus = "Rejected";
     }
 
     const updatedApplicants = applicants.map(app => 
@@ -155,6 +169,21 @@ const Applicants = () => {
     toast.success(`Applicant status updated to: ${newStatus}`);
   };
 
+  const filterApplicantsByStatus = (status) => {
+    switch (status) {
+      case 'pending':
+        return applicants.filter(app => app.status === "Pending Review");
+      case 'interviewed':
+        return applicants.filter(app => app.status === "Interviewed" || app.status === "Pending Interview");
+      case 'confirmed':
+        return applicants.filter(app => app.status === "Pending Confirmation" || app.status === "Accepted");
+      case 'rejected':
+        return applicants.filter(app => app.status === "Rejected");
+      default:
+        return applicants;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F5F5F0] text-[#2C3539] p-8">
       <Card className="max-w-6xl mx-auto bg-[#FFFEFA] shadow-lg rounded-lg">
@@ -166,41 +195,20 @@ const Applicants = () => {
             <TabsList>
               <TabsTrigger value="all">All Applicants</TabsTrigger>
               <TabsTrigger value="pending">Pending Review</TabsTrigger>
-              <TabsTrigger value="interviewed">Interviewed</TabsTrigger>
-              <TabsTrigger value="confirmed">Confirmed</TabsTrigger>
+              <TabsTrigger value="interviewed">Interview Process</TabsTrigger>
+              <TabsTrigger value="confirmed">Confirmation Process</TabsTrigger>
+              <TabsTrigger value="rejected">Rejected</TabsTrigger>
             </TabsList>
-            <TabsContent value="all">
-              <ApplicantsTable
-                applicants={applicants}
-                onReview={handleReview}
-                onViewInfo={handleViewInfo}
-                onUpdateStatus={handleUpdateStatus}
-              />
-            </TabsContent>
-            <TabsContent value="pending">
-              <ApplicantsTable
-                applicants={applicants.filter(app => app.status === "Pending Review")}
-                onReview={handleReview}
-                onViewInfo={handleViewInfo}
-                onUpdateStatus={handleUpdateStatus}
-              />
-            </TabsContent>
-            <TabsContent value="interviewed">
-              <ApplicantsTable
-                applicants={applicants.filter(app => app.status === "Interviewed")}
-                onReview={handleReview}
-                onViewInfo={handleViewInfo}
-                onUpdateStatus={handleUpdateStatus}
-              />
-            </TabsContent>
-            <TabsContent value="confirmed">
-              <ApplicantsTable
-                applicants={applicants.filter(app => app.status === "Pending Confirmation" || app.status === "Accepted")}
-                onReview={handleReview}
-                onViewInfo={handleViewInfo}
-                onUpdateStatus={handleUpdateStatus}
-              />
-            </TabsContent>
+            {['all', 'pending', 'interviewed', 'confirmed', 'rejected'].map((tab) => (
+              <TabsContent key={tab} value={tab}>
+                <ApplicantsTable
+                  applicants={filterApplicantsByStatus(tab)}
+                  onReview={handleReview}
+                  onViewInfo={handleViewInfo}
+                  onUpdateStatus={handleUpdateStatus}
+                />
+              </TabsContent>
+            ))}
           </Tabs>
         </CardContent>
       </Card>
@@ -225,4 +233,4 @@ const Applicants = () => {
   );
 };
 
-export default Applicants;
+export default ApplicantsPage;
