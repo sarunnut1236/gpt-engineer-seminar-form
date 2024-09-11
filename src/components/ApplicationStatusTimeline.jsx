@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, Circle, XCircle } from 'lucide-react';
+import { CheckCircle2, Circle, XCircle, Clock } from 'lucide-react';
 
 const statuses = [
   'Pending Application Form',
@@ -13,41 +13,44 @@ const statuses = [
   'Rejected'
 ];
 
+const StatusIcon = ({ status, isActive }) => {
+  const baseClasses = "w-8 h-8 rounded-full flex items-center justify-center";
+  const activeClasses = isActive ? "text-white" : "text-gray-400";
+  
+  switch (status) {
+    case 'Completed Application Form':
+    case 'Round #1 Pass':
+    case 'Interviewed':
+    case 'Accepted':
+      return <CheckCircle2 className={`${baseClasses} ${activeClasses} ${isActive ? "bg-green-500" : "bg-gray-200"}`} />;
+    case 'Round #1 Rejected':
+    case 'Rejected':
+      return <XCircle className={`${baseClasses} ${activeClasses} ${isActive ? "bg-red-500" : "bg-gray-200"}`} />;
+    case 'Pending Application Form':
+    case 'Pending Interview':
+    case 'Pending Confirmation':
+      return <Clock className={`${baseClasses} ${activeClasses} ${isActive ? "bg-yellow-500" : "bg-gray-200"}`} />;
+    default:
+      return <Circle className={`${baseClasses} ${activeClasses} ${isActive ? "bg-blue-500" : "bg-gray-200"}`} />;
+  }
+};
+
 const ApplicationStatusTimeline = ({ currentStatus }) => {
-  const getCurrentStatusIndex = () => statuses.indexOf(currentStatus);
+  const currentStatusIndex = statuses.indexOf(currentStatus);
 
   return (
-    <div className="flex flex-col space-y-4">
-      <h3 className="text-lg font-semibold">Application Status</h3>
-      <div className="relative">
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <h3 className="text-xl font-semibold mb-4 text-[#2C3539]">Application Status</h3>
+      <div className="space-y-4">
         {statuses.map((status, index) => (
-          <div
-            key={status}
-            className={`flex items-center mb-4 transition-all duration-300 ease-in-out ${
-              index <= getCurrentStatusIndex() ? 'opacity-100 scale-100' : 'opacity-70 scale-95'
-            }`}
-          >
-            {index <= getCurrentStatusIndex() ? (
-              status === 'Round #1 Rejected' || status === 'Rejected' ? (
-                <XCircle className="h-6 w-6 text-red-500 transition-all duration-300 ease-in-out" />
-              ) : (
-                <CheckCircle2 className="h-6 w-6 text-green-500 transition-all duration-300 ease-in-out" />
-              )
-            ) : (
-              <Circle className="h-6 w-6 text-gray-300 transition-all duration-300 ease-in-out" />
-            )}
-            <span className={`ml-2 ${index === getCurrentStatusIndex() ? 'font-bold' : ''}`}>
-              {status}
-            </span>
-            {index < statuses.length - 1 && (
-              <div
-                className="absolute left-3 w-0.5 bg-gray-300 transition-all duration-300 ease-in-out"
-                style={{
-                  top: `${(index + 1) * 32}px`,
-                  height: index < getCurrentStatusIndex() ? '24px' : '0',
-                }}
-              />
-            )}
+          <div key={status} className={`flex items-center ${index <= currentStatusIndex ? 'opacity-100' : 'opacity-50'}`}>
+            <StatusIcon status={status} isActive={index <= currentStatusIndex} />
+            <div className="ml-4 flex-grow">
+              <p className={`font-medium ${index === currentStatusIndex ? 'text-[#2C3539]' : 'text-gray-500'}`}>{status}</p>
+              {index === currentStatusIndex && (
+                <p className="text-sm text-gray-500">Current Status</p>
+              )}
+            </div>
           </div>
         ))}
       </div>
