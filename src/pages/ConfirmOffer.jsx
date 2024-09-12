@@ -64,7 +64,7 @@ const ConfirmOffer = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F5F0] text-[#2C3539] p-8">
+    <div className="min-h-screen bg-[#F5F5F0] text-[#2C3539] p-4 md:p-8">
       <div className="max-w-2xl mx-auto">
         <Card className="bg-[#FFFEFA] shadow-lg rounded-lg mb-8">
           <CardHeader>
@@ -72,30 +72,34 @@ const ConfirmOffer = () => {
             <CardDescription>Please review the seminar details and confirm your participation</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Seminar Details</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center">
-                  <CalendarIcon className="mr-2 h-5 w-5 text-[#2C3539]" />
-                  <span>July 15-17, 2024</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <Card className="bg-[#F5F5F0] p-4">
+                <h3 className="text-lg font-semibold mb-2">Seminar Details</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <CalendarIcon className="mr-2 h-5 w-5 text-[#2C3539]" />
+                    <span>July 15-17, 2024</span>
+                  </div>
+                  <div className="flex items-center">
+                    <MapPinIcon className="mr-2 h-5 w-5 text-[#2C3539]" />
+                    <span>Grand Conference Center, Bangkok</span>
+                  </div>
+                  <div className="flex items-center">
+                    <UsersIcon className="mr-2 h-5 w-5 text-[#2C3539]" />
+                    <span>200 Participants</span>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <MapPinIcon className="mr-2 h-5 w-5 text-[#2C3539]" />
-                  <span>Grand Conference Center, Bangkok</span>
+              </Card>
+              <Card className="bg-[#F5F5F0] p-4">
+                <h3 className="text-lg font-semibold mb-2">Payment Details</h3>
+                <div className="space-y-1">
+                  <p>Seminar Fee: 5,000 THB</p>
+                  <p>Payment Method: Bank Transfer</p>
+                  <p>Account Name: Leadership Seminar Co., Ltd.</p>
+                  <p>Account Number: 123-4-56789-0</p>
+                  <p>Bank: Example Bank</p>
                 </div>
-                <div className="flex items-center">
-                  <UsersIcon className="mr-2 h-5 w-5 text-[#2C3539]" />
-                  <span>200 Participants</span>
-                </div>
-              </div>
-            </div>
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Payment Details</h3>
-              <p>Seminar Fee: 5,000 THB</p>
-              <p>Payment Method: Bank Transfer</p>
-              <p>Account Name: Leadership Seminar Co., Ltd.</p>
-              <p>Account Number: 123-4-56789-0</p>
-              <p>Bank: Example Bank</p>
+              </Card>
             </div>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
