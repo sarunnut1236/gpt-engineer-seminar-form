@@ -22,14 +22,14 @@ const StatusIcon = ({ status, isActive }) => {
     case 'Round 1 Pass':
     case 'Interviewed':
     case 'Accepted':
-      return <CheckCircle2 className={`${baseClasses} ${activeClasses}`} />;
+      return <CheckCircle2 className={`${baseClasses} ${isActive ? "text-green-500" : "text-gray-300"}`} />;
     case 'Round 1 Rejected':
     case 'Rejected':
-      return <XCircle className={`${baseClasses} ${activeClasses}`} />;
+      return <XCircle className={`${baseClasses} ${isActive ? "text-red-500" : "text-gray-300"}`} />;
     case 'Pending Application':
     case 'Interview Scheduled':
     case 'Offer Pending':
-      return <Clock className={`${baseClasses} ${activeClasses}`} />;
+      return <Clock className={`${baseClasses} ${isActive ? "text-yellow-500" : "text-gray-300"}`} />;
     default:
       return <Circle className={`${baseClasses} ${activeClasses}`} />;
   }

@@ -63,12 +63,12 @@ const Index = () => {
         
         {/* Photo Gallery */}
         <h2 className="text-2xl font-semibold mb-6 text-center">Photo Gallery</h2>
-        <Carousel className="w-full max-w-4xl mx-auto mb-12">
+        <Carousel className="w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl mx-auto mb-12">
           <CarouselContent>
             {galleryImages.map((image, index) => (
               <CarouselItem key={index}>
                 <div className="p-1">
-                  <img src={image} alt={`Seminar image ${index + 1}`} className="w-full h-64 object-cover rounded-lg transform hover:scale-105 transition-transform duration-300" />
+                  <img src={image} alt={`Seminar image ${index + 1}`} className="w-full h-48 sm:h-64 object-cover rounded-lg transform hover:scale-105 transition-transform duration-300" />
                 </div>
               </CarouselItem>
             ))}
@@ -83,7 +83,7 @@ const Index = () => {
           <p className="text-lg mb-6">Join us for an unforgettable experience of growth and inspiration.</p>
           <Button asChild className="bg-[#2C3539] hover:bg-[#4A5459] text-white text-lg px-8 py-3">
             <Link to="/registration">
-              <AwardIcon className="mr-2 h-5 w-5" /> Register Now
+              <AwardIcon className="mr-2 h-5 w-4" /> Register Now
             </Link>
           </Button>
         </div>

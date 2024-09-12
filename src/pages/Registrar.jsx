@@ -4,15 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, SortAsc, SortDesc, Download } from 'lucide-react';
+import { Search, SortAsc, SortDesc, Download, Eye } from 'lucide-react';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 const mockApplicants = [
-  { id: 1, name: "John Doe", email: "john@example.com", school: "Sunrise High School", status: "Pending Interview", province: "Bangkok", level: "High School", grade: "12" },
-  { id: 2, name: "Jane Smith", email: "jane@example.com", school: "Evergreen Academy", status: "Accepted", province: "Chiang Mai", level: "High School", grade: "11" },
-  { id: 3, name: "Bob Johnson", email: "bob@example.com", school: "Oakwood International School", status: "Pending Confirmation", province: "Phuket", level: "High School", grade: "10" },
-  { id: 4, name: "Alice Brown", email: "alice@example.com", school: "Maple Grove High", status: "Round #1 Pass", province: "Bangkok", level: "High School", grade: "12" },
-  { id: 5, name: "Charlie Davis", email: "charlie@example.com", school: "Pinecrest Academy", status: "Completed Application Form", province: "Chiang Mai", level: "High School", grade: "11" },
+  { id: 1, name: "John Doe", email: "john@example.com", school: "Sunrise High School", status: "Pending Interview", province: "Bangkok", level: "High School", grade: "12", gender: "Male", birthday: "2005-05-15", tel: "0812345678", guardianTel: "0898765432", religion: "Buddhism", lineId: "johndoe123", facebook: "john.doe", instagram: "@johndoe", medicalCondition: "None", personalMedication: "None", foodAllergy: "Peanuts", shirtSize: "M" },
+  // ... (add more mock applicants with all fields)
 ];
 
 const Registrar = () => {
@@ -22,6 +20,8 @@ const Registrar = () => {
   const [sortDirection, setSortDirection] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [selectedApplicant, setSelectedApplicant] = useState(null);
+  const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false);
 
   const handleSearch = (event) => {
     const term = event.target.value.toLowerCase();
@@ -62,6 +62,11 @@ const Registrar = () => {
     // Implement the actual export functionality here
   };
 
+  const handleViewInfo = (applicant) => {
+    setSelectedApplicant(applicant);
+    setIsInfoDialogOpen(true);
+  };
+
   // Pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -69,29 +74,36 @@ const Registrar = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const renderSortIcon = (field) => {
+    if (sortField === field) {
+      return sortDirection === 'asc' ? <SortAsc className="inline h-4 w-4" /> : <SortDesc className="inline h-4 w-4" />;
+    }
+    return null;
+  };
+
   return (
-    <div className="min-h-screen bg-[#F5F5F0] text-[#2C3539] p-8">
+    <div className="min-h-screen bg-[#F5F5F0] text-[#2C3539] p-4 md:p-8">
       <Card className="bg-[#FFFEFA] shadow-lg rounded-lg">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-2xl font-semibold">Applicant Registry</CardTitle>
+        <CardHeader className="flex flex-col md:flex-row items-center justify-between">
+          <CardTitle className="text-2xl font-semibold mb-4 md:mb-0">Applicant Registry</CardTitle>
           <Button onClick={exportToGoogleSheets} className="bg-[#2C3539] hover:bg-[#4A5459] text-white">
             <Download className="mr-2 h-4 w-4" /> Export to Google Sheets
           </Button>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+            <div className="flex items-center w-full md:w-auto mb-4 md:mb-0">
               <Search className="mr-2 h-4 w-4 text-gray-500" />
               <Input
                 type="text"
                 placeholder="Search applicants..."
                 value={searchTerm}
                 onChange={handleSearch}
-                className="w-64"
+                className="w-full md:w-64"
               />
             </div>
-            <Select onValueChange={handleFilter}>
-              <SelectTrigger className="w-[180px]">
+            <Select onValueChange={handleFilter} className="w-full md:w-auto">
+              <SelectTrigger className="w-full md:w-[180px]">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
@@ -104,48 +116,40 @@ const Registrar = () => {
               </SelectContent>
             </Select>
           </div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="cursor-pointer" onClick={() => handleSort('name')}>
-                  Name {sortField === 'name' && (sortDirection === 'asc' ? <SortAsc className="inline h-4 w-4" /> : <SortDesc className="inline h-4 w-4" />)}
-                </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => handleSort('email')}>
-                  Email {sortField === 'email' && (sortDirection === 'asc' ? <SortAsc className="inline h-4 w-4" /> : <SortDesc className="inline h-4 w-4" />)}
-                </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => handleSort('school')}>
-                  School {sortField === 'school' && (sortDirection === 'asc' ? <SortAsc className="inline h-4 w-4" /> : <SortDesc className="inline h-4 w-4" />)}
-                </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => handleSort('province')}>
-                  Province {sortField === 'province' && (sortDirection === 'asc' ? <SortAsc className="inline h-4 w-4" /> : <SortDesc className="inline h-4 w-4" />)}
-                </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => handleSort('level')}>
-                  Level {sortField === 'level' && (sortDirection === 'asc' ? <SortAsc className="inline h-4 w-4" /> : <SortDesc className="inline h-4 w-4" />)}
-                </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => handleSort('grade')}>
-                  Grade {sortField === 'grade' && (sortDirection === 'asc' ? <SortAsc className="inline h-4 w-4" /> : <SortDesc className="inline h-4 w-4" />)}
-                </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => handleSort('status')}>
-                  Status {sortField === 'status' && (sortDirection === 'asc' ? <SortAsc className="inline h-4 w-4" /> : <SortDesc className="inline h-4 w-4" />)}
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {currentItems.map((applicant) => (
-                <TableRow key={applicant.id}>
-                  <TableCell>{applicant.name}</TableCell>
-                  <TableCell>{applicant.email}</TableCell>
-                  <TableCell>{applicant.school}</TableCell>
-                  <TableCell>{applicant.province}</TableCell>
-                  <TableCell>{applicant.level}</TableCell>
-                  <TableCell>{applicant.grade}</TableCell>
-                  <TableCell>{applicant.status}</TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  {['name', 'email', 'school', 'province', 'level', 'grade', 'status'].map((field) => (
+                    <TableHead key={field} className="cursor-pointer" onClick={() => handleSort(field)}>
+                      {field.charAt(0).toUpperCase() + field.slice(1)} {renderSortIcon(field)}
+                    </TableHead>
+                  ))}
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <div className="mt-4 flex justify-between items-center">
-            <p>Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, applicants.length)} of {applicants.length} entries</p>
+              </TableHeader>
+              <TableBody>
+                {currentItems.map((applicant) => (
+                  <TableRow key={applicant.id}>
+                    <TableCell>{applicant.name}</TableCell>
+                    <TableCell>{applicant.email}</TableCell>
+                    <TableCell>{applicant.school}</TableCell>
+                    <TableCell>{applicant.province}</TableCell>
+                    <TableCell>{applicant.level}</TableCell>
+                    <TableCell>{applicant.grade}</TableCell>
+                    <TableCell>{applicant.status}</TableCell>
+                    <TableCell>
+                      <Button variant="ghost" size="sm" onClick={() => handleViewInfo(applicant)}>
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="mt-4 flex flex-col md:flex-row justify-between items-center">
+            <p className="mb-4 md:mb-0">Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, applicants.length)} of {applicants.length} entries</p>
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
@@ -166,6 +170,24 @@ const Registrar = () => {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={isInfoDialogOpen} onOpenChange={setIsInfoDialogOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Applicant Details: {selectedApplicant?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto">
+            {selectedApplicant && Object.entries(selectedApplicant).map(([key, value]) => (
+              <div key={key} className="mb-2">
+                <strong className="capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}:</strong> {value}
+              </div>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setIsInfoDialogOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

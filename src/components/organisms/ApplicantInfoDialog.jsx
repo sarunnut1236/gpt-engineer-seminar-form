@@ -13,7 +13,21 @@ const ApplicantInfoDialog = ({ isOpen, onOpenChange, applicant }) => (
         <ApplicantInfoItem label="Email" value={applicant?.email} />
         <ApplicantInfoItem label="School" value={applicant?.school} />
         <ApplicantInfoItem label="Status" value={applicant?.status} />
-        {/* Add more personal information fields here */}
+        <ApplicantInfoItem label="Province" value={applicant?.province} />
+        <ApplicantInfoItem label="Level" value={applicant?.level} />
+        <ApplicantInfoItem label="Grade" value={applicant?.grade} />
+        <ApplicantInfoItem label="Gender" value={applicant?.gender} />
+        <ApplicantInfoItem label="Birthday" value={applicant?.birthday} />
+        <ApplicantInfoItem label="Telephone" value={applicant?.tel} />
+        <ApplicantInfoItem label="Guardian's Telephone" value={applicant?.guardianTel} />
+        {applicant?.answers && (
+          <>
+            <h3 className="font-semibold mt-4 mb-2">Application Answers:</h3>
+            {applicant.answers.map((answer, index) => (
+              <ApplicantInfoItem key={index} label={`Question ${index + 1}`} value={answer} />
+            ))}
+          </>
+        )}
       </div>
       <DialogFooter>
         <Button onClick={() => onOpenChange(false)}>Close</Button>

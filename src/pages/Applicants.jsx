@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ApplicantsTable from '@/components/organisms/ApplicantsTable';
 import ReviewDialog from '@/components/organisms/ReviewDialog';
 import ApplicantInfoDialog from '@/components/organisms/ApplicantInfoDialog';
@@ -20,78 +21,16 @@ const mockApplicants = [
       "I believe the most important qualities of a leader are integrity, empathy, and vision...",
       "I had to make a difficult decision when choosing between two extracurricular activities...",
       "To motivate others, I try to lead by example and provide positive reinforcement..."
-    ]
+    ],
+    province: "Bangkok",
+    level: "High School",
+    grade: "12",
+    gender: "Male",
+    birthday: "2005-05-15",
+    tel: "0812345678",
+    guardianTel: "0898765432",
   },
-  { 
-    id: 2, 
-    name: "Jane Smith", 
-    email: "jane@example.com", 
-    school: "Evergreen Academy",
-    status: "Interviewed",
-    answers: [
-      "In my role as class president, I initiated a recycling program...",
-      "I handle conflicts by promoting open communication and finding common ground...",
-      "The most crucial leadership qualities are adaptability, communication skills, and resilience...",
-      "A difficult decision I faced was whether to pursue a summer internship or volunteer abroad...",
-      "I motivate others by setting clear goals, providing support, and celebrating achievements..."
-    ]
-  },
-  { 
-    id: 3, 
-    name: "Bob Johnson", 
-    email: "bob@example.com", 
-    school: "Oakwood International School",
-    status: "Pending Interview",
-    answers: [
-      "I demonstrated leadership when I captained my school's debate team...",
-      "To resolve conflicts, I encourage team members to express their concerns and work together...",
-      "I believe leaders should be visionary, empathetic, and decisive...",
-      "I had to make a tough choice between focusing on academics or pursuing a passion project...",
-      "I motivate my peers by sharing enthusiasm for our goals and recognizing individual contributions..."
-    ]
-  },
-  { 
-    id: 4, 
-    name: "Alice Brown", 
-    email: "alice@example.com", 
-    school: "Maple Grove High",
-    status: "Pending Confirmation",
-    answers: [
-      "I took the initiative to start a peer tutoring program at my school...",
-      "When conflicts occur, I try to mediate and find win-win solutions...",
-      "Key leadership qualities include active listening, accountability, and the ability to inspire others...",
-      "A challenging decision I faced was whether to switch to a more rigorous academic program...",
-      "To motivate team members, I focus on creating a positive and supportive environment..."
-    ]
-  },
-  { 
-    id: 5, 
-    name: "Charlie Davis", 
-    email: "charlie@example.com", 
-    school: "Pinecrest Academy",
-    status: "Accepted",
-    answers: [
-      "I showcased leadership by organizing a community service project...",
-      "I approach conflicts by encouraging open dialogue and finding compromises...",
-      "Essential leadership traits include adaptability, integrity, and the ability to delegate effectively...",
-      "I had to decide between pursuing a leadership role in student government or focusing on my academic research...",
-      "I motivate others by setting a positive example and helping them see the bigger picture of our goals..."
-    ]
-  },
-  {
-    id: 6,
-    name: "Eva Wilson",
-    email: "eva@example.com",
-    school: "Riverside High",
-    status: "Rejected",
-    answers: [
-      "I organized a school-wide talent show to raise funds for a local charity...",
-      "I believe in addressing conflicts head-on through open and honest communication...",
-      "A great leader should be empathetic, decisive, and able to inspire others...",
-      "I had to choose between continuing my sports career or focusing on academic pursuits...",
-      "I motivate my team by recognizing individual strengths and fostering a collaborative environment..."
-    ]
-  },
+  // ... (other applicants with similar detailed information)
 ];
 
 const scoringCriteria = [
@@ -116,6 +55,7 @@ const ApplicantsPage = () => {
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
   const [isInfoDialogOpen, setIsInfoDialogOpen] = useState(false);
   const [scores, setScores] = useState({});
+  const [activeTab, setActiveTab] = useState("all");
 
   const handleReview = (applicant) => {
     setSelectedApplicant(applicant);
@@ -136,9 +76,6 @@ const ApplicantsPage = () => {
   };
 
   const handleSubmitReview = () => {
-    console.log("Submitting review for applicant:", selectedApplicant.id);
-    console.log("Scores:", scores);
-
     const totalScore = Object.values(scores).reduce((sum, score) => sum + parseInt(score), 0);
     const averageScore = totalScore / Object.keys(scores).length;
 
@@ -191,7 +128,21 @@ const ApplicantsPage = () => {
           <CardTitle className="text-3xl font-semibold">Applicants</CardTitle>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="all">
+          <div className="md:hidden mb-4">
+            <Select onValueChange={(value) => setActiveTab(value)} defaultValue={activeTab}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Applicants</SelectItem>
+                <SelectItem value="pending">Pending Review</SelectItem>
+                <SelectItem value="interviewed">Interview Process</SelectItem>
+                <SelectItem value="confirmed">Confirmation Process</SelectItem>
+                <SelectItem value="rejected">Rejected</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="hidden md:block">
             <TabsList>
               <TabsTrigger value="all">All Applicants</TabsTrigger>
               <TabsTrigger value="pending">Pending Review</TabsTrigger>
@@ -199,17 +150,15 @@ const ApplicantsPage = () => {
               <TabsTrigger value="confirmed">Confirmation Process</TabsTrigger>
               <TabsTrigger value="rejected">Rejected</TabsTrigger>
             </TabsList>
-            {['all', 'pending', 'interviewed', 'confirmed', 'rejected'].map((tab) => (
-              <TabsContent key={tab} value={tab}>
-                <ApplicantsTable
-                  applicants={filterApplicantsByStatus(tab)}
-                  onReview={handleReview}
-                  onViewInfo={handleViewInfo}
-                  onUpdateStatus={handleUpdateStatus}
-                />
-              </TabsContent>
-            ))}
           </Tabs>
+          <TabsContent value={activeTab}>
+            <ApplicantsTable
+              applicants={filterApplicantsByStatus(activeTab)}
+              onReview={handleReview}
+              onViewInfo={handleViewInfo}
+              onUpdateStatus={handleUpdateStatus}
+            />
+          </TabsContent>
         </CardContent>
       </Card>
 
