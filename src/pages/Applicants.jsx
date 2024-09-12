@@ -142,23 +142,23 @@ const ApplicantsPage = () => {
               </SelectContent>
             </Select>
           </div>
-          <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="hidden md:block">
-            <TabsList>
+          <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="hidden md:flex">
               <TabsTrigger value="all">All Applicants</TabsTrigger>
               <TabsTrigger value="pending">Pending Review</TabsTrigger>
               <TabsTrigger value="interviewed">Interview Process</TabsTrigger>
               <TabsTrigger value="confirmed">Confirmation Process</TabsTrigger>
               <TabsTrigger value="rejected">Rejected</TabsTrigger>
             </TabsList>
+            <TabsContent value={activeTab}>
+              <ApplicantsTable
+                applicants={filterApplicantsByStatus(activeTab)}
+                onReview={handleReview}
+                onViewInfo={handleViewInfo}
+                onUpdateStatus={handleUpdateStatus}
+              />
+            </TabsContent>
           </Tabs>
-          <TabsContent value={activeTab}>
-            <ApplicantsTable
-              applicants={filterApplicantsByStatus(activeTab)}
-              onReview={handleReview}
-              onViewInfo={handleViewInfo}
-              onUpdateStatus={handleUpdateStatus}
-            />
-          </TabsContent>
         </CardContent>
       </Card>
 
