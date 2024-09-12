@@ -7,6 +7,9 @@ import ReviewDialog from '@/components/organisms/ReviewDialog';
 import ApplicantInfoDialog from '@/components/organisms/ApplicantInfoDialog';
 import { Button } from "@/components/ui/button";
 import { toast } from 'sonner';
+import { EyeIcon, MoreVertical } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import StatusIcon from '@/components/atoms/StatusIcon';
 
 const mockApplicants = [
   { 
@@ -48,6 +51,46 @@ const questions = [
   "Describe a time when you had to make a difficult decision. How did you approach it?",
   "How do you motivate others to achieve a common goal?"
 ];
+
+const ApplicantCard = ({ applicant, onReview, onViewInfo, onUpdateStatus }) => (
+  <Card className="mb-4">
+    <CardContent className="p-4">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-lg font-semibold">{applicant.name}</h3>
+        <StatusIcon status={applicant.status} />
+      </div>
+      <p className="text-sm mb-2">{applicant.email}</p>
+      <p className="text-sm mb-2">{applicant.school}</p>
+      <div className="flex justify-between items-center mt-4">
+        <Button onClick={() => onReview(applicant)} size="sm">Review</Button>
+        <Button onClick={() => onViewInfo(applicant)} variant="outline" size="sm">
+          <EyeIcon className="h-4 w-4 mr-2" /> View Info
+        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => onUpdateStatus(applicant, "Pending Interview")}>
+              Set to Pending Interview
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onUpdateStatus(applicant, "Interviewed")}>
+              Set to Interviewed
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onUpdateStatus(applicant, "Pending Confirmation")}>
+              Set to Pending Confirmation
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onUpdateStatus(applicant, "Accepted")}>
+              Set to Accepted
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </CardContent>
+  </Card>
+);
 
 const ApplicantsPage = () => {
   const [applicants, setApplicants] = useState(mockApplicants);
@@ -151,12 +194,25 @@ const ApplicantsPage = () => {
               <TabsTrigger value="rejected">Rejected</TabsTrigger>
             </TabsList>
             <TabsContent value={activeTab}>
-              <ApplicantsTable
-                applicants={filterApplicantsByStatus(activeTab)}
-                onReview={handleReview}
-                onViewInfo={handleViewInfo}
-                onUpdateStatus={handleUpdateStatus}
-              />
+              <div className="md:hidden">
+                {filterApplicantsByStatus(activeTab).map(applicant => (
+                  <ApplicantCard
+                    key={applicant.id}
+                    applicant={applicant}
+                    onReview={handleReview}
+                    onViewInfo={handleViewInfo}
+                    onUpdateStatus={handleUpdateStatus}
+                  />
+                ))}
+              </div>
+              <div className="hidden md:block">
+                <ApplicantsTable
+                  applicants={filterApplicantsByStatus(activeTab)}
+                  onReview={handleReview}
+                  onViewInfo={handleViewInfo}
+                  onUpdateStatus={handleUpdateStatus}
+                />
+              </div>
             </TabsContent>
           </Tabs>
         </CardContent>
