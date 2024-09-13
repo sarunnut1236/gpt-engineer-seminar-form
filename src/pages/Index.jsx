@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon, BookOpenIcon, AwardIcon } from "lucide-react";
+import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon, BookOpenIcon, AwardIcon, StarIcon } from "lucide-react";
 
 const Index = () => {
   const speakers = [
@@ -19,9 +19,9 @@ const Index = () => {
   ];
 
   const reviews = [
-    { name: "Alex Thompson", role: "Marketing Manager", comment: "This seminar was a game-changer for my career. The insights I gained have been invaluable in my day-to-day work.", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" },
-    { name: "Emily Chen", role: "Startup Founder", comment: "The networking opportunities alone were worth it. I've made connections that have helped grow my business exponentially.", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" },
-    { name: "Michael Rodriguez", role: "HR Director", comment: "The leadership strategies taught here have transformed how I approach team management. Highly recommended!", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" },
+    { name: "Alex Thompson", role: "Marketing Manager", comment: "This seminar was a game-changer for my career. The insights I gained have been invaluable in my day-to-day work.", rating: 5 },
+    { name: "Emily Chen", role: "Startup Founder", comment: "The networking opportunities alone were worth it. I've made connections that have helped grow my business exponentially.", rating: 5 },
+    { name: "Michael Rodriguez", role: "HR Director", comment: "The leadership strategies taught here have transformed how I approach team management. Highly recommended!", rating: 4 },
   ];
 
   return (
@@ -89,7 +89,11 @@ const Index = () => {
           {reviews.map((review, index) => (
             <Card key={index} className="bg-[#FFFEFA] border-[#D2C8B6] transform hover:scale-105 transition-transform duration-300">
               <CardContent className="p-6 flex flex-col items-center">
-                <img src={review.image} alt={review.name} className="w-20 h-20 rounded-full mb-4 object-cover" />
+                <div className="flex mb-2">
+                  {[...Array(review.rating)].map((_, i) => (
+                    <StarIcon key={i} className="h-5 w-5 text-yellow-400" />
+                  ))}
+                </div>
                 <p className="text-center mb-4 italic">"{review.comment}"</p>
                 <h3 className="text-lg font-semibold">{review.name}</h3>
                 <p className="text-[#4A5459]">{review.role}</p>
